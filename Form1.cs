@@ -30,19 +30,23 @@ namespace RSS
             query += " GROUP BY Employees.Id ORDER BY Salar DESC";
             using (SqlConnection connection = new SqlConnection(stringConnection))
             {
-                connection.Open();
-                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, connection);
-                ds = new DataSet();
-                sqlDataAdapter.Fill(ds);
-                for (int i = 0; i <= ds.Tables[1].Rows.Count - 1; i++)
-                    if (ds.Tables[1].Rows[i][1].ToString() == "")
-                        ds.Tables[1].Rows[i][1] = 0;
-                ds.Tables[1].PrimaryKey = new DataColumn[] { ds.Tables[1].Columns["Id"] };
-                ds.Tables[1].Merge(ds.Tables[0]);
-                dataGridView1.DataSource = ds.Tables[1];
-                for (int i = 0; i <= dataGridView1.Rows.Count - 1; i++)
-                    if (Convert.ToInt16(dataGridView1[1, i].Value) < 20000)
-                        dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.IndianRed;
+                try
+                { 
+                    connection.Open();
+                    SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(query, connection);
+                    ds = new DataSet();
+                    sqlDataAdapter.Fill(ds);
+                    for (int i = 0; i <= ds.Tables[1].Rows.Count - 1; i++)
+                        if (ds.Tables[1].Rows[i][1].ToString() == "")
+                            ds.Tables[1].Rows[i][1] = 0;
+                    ds.Tables[1].PrimaryKey = new DataColumn[] { ds.Tables[1].Columns["Id"] };
+                    ds.Tables[1].Merge(ds.Tables[0]);
+                    dataGridView1.DataSource = ds.Tables[1];
+                    for (int i = 0; i <= dataGridView1.Rows.Count - 1; i++)
+                        if (Convert.ToInt16(dataGridView1[1, i].Value) < 20000)
+                            dataGridView1.Rows[i].DefaultCellStyle.BackColor = Color.IndianRed;
+                }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }
         }
     }
